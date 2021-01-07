@@ -151,6 +151,18 @@ class Board extends CI_Controller {
 
 		return $seg_exp;
 	}
+
+	/**
+	 * 게시물 보기
+	 */
+	function view()
+	{
+		// 게시판 이름과 게시물 번호에 해당하는 게시물 가져오기
+		$data['views'] = $this->board_m->get_view($this->uri->segment(3), $this->uri->segment(4));
+
+		// view 호출
+		$this->load->view('board/view_v', $data);
+	}
 }
 
 /* End of file Board.php */
