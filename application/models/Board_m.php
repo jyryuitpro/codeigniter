@@ -13,8 +13,15 @@ class Board_m extends CI_Model {
         parent::__construct();
     }
 
-    function get_list($table = 'ci_board', $type='', $offset='', $limit='')
+    function get_list($table = 'ci_board', $type='', $offset='', $limit='', $search_word='')
     {
+		$sword = '';
+
+		if ($search_word != '') {
+			// 검색어가 있을 경우의 처리
+			$sword = ' WHERE subject like "%' . $search_word . '%" || contents like "%' . $search_word . '%" ';
+		}
+
 		$limit_query = '';
 
 		if ($limit != '' || $offset != '') {
@@ -22,7 +29,7 @@ class Board_m extends CI_Model {
 			$limit_query = ' LIMIT ' . $offset . ', ' . $limit;
 		}
 
-		$sql = "SELECT * FROM " . $table . " ORDER BY board_id DESC" . $limit_query;
+		$sql = "SELECT * FROM " . $table . $sword . " ORDER BY board_id DESC" . $limit_query;
         $query = $this->db->query($sql);
 
 		if ($type == 'count') {

@@ -10,6 +10,26 @@
 	<![endif]-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<link rel='stylesheet' href="/include/css/bootstrap.css" />
+	<script>
+		$(document).ready(function () {
+			$("#search_btn").click(function () {
+				if ($("#q").val() == '') {
+					alert('검색어를 입력하세요');
+					return false;
+				} else {
+					let act = '/board/lists/ci_board/q/' + $("#q").val() + '/page/1';
+					$('#bd_search').attr('action', act).submit();
+				}
+			});
+		});
+
+		function board_search_enter(form) {
+			let keycode = window.event.keyCode;
+			if (keycode == 13) {
+				$('#search_btn').click();
+			}
+		}
+	</script>
 </head>
 <body>
 <div id="main">
