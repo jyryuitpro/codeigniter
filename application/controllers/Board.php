@@ -51,7 +51,7 @@ class Board extends CI_Controller {
 
 		// 검색어 초기화
 		$search_word = $page_url = '';
-		$uri_segment = 4;
+		$uri_segment = 5;
 
 		// 주소 중에서 q(검색어) 세그먼트가 있는지 검사하기 위해 주소를 배열로 변환
 		$uri_array = $this->segment_explode($this->uri->uri_string());
@@ -162,6 +162,58 @@ class Board extends CI_Controller {
 
 		// view 호출
 		$this->load->view('board/view_v', $data);
+	}
+
+	/**
+	 * 게시물 쓰기
+	 */
+	function write()
+	{
+		echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+		if ($_POST) {
+			// 글쓰기 POST 전송 시
+
+			// 경고창 헬퍼 로딩
+			$this->load->helper('alert');
+
+			// 주소 중에서 page 세그먼트가 있는지 검사하기 위해 주소를 배열로 변환
+			$uri_array = $this->segment_explode($this->uri->uri_string());
+
+			if (in_array('page', $uri_array)) {
+				$pages = urldecode($this->url_explode($uri_array, 'page'));
+			} else {
+				$pages = 1;
+			}
+
+			if (!$this->input->post('subject', TRUE) && !$this->input->post('subject', TRUE)) {
+				// 글 내용이 없을 경우, 프로그램단에서 한 번 더 체크
+				alert('비정상적인 접근입니다.', '/board/lists/' . $this->uri->segment(3) . '/page/' . $pages);
+				exit;
+			}
+
+//			var_dump($POST);
+			$write_data = array(
+				'table' => $this->uri->segment(3), //게시판 테이블명
+				'subject' => $this->input->post('subject', TRUE),
+				'contents' => $this->input->post('contents', TRUE)
+			);
+
+			$result = $this->board_m->insert_board($write_data);
+
+			if ($result) {
+				// 글 작성 성공 시 게시물 목록으로
+				alert('입력되었습니다.', '/board/lists/' . $this->uri->segment(3) . '/page/' . $pages);
+				exit;
+			} else {
+				// 글 실패 시 게시물 목록으로
+				alert('다시 입력해 주세요..', '/board/lists/' . $this->uri->segment(3) . '/page/' . $pages);
+				exit;
+			}
+
+		} else {
+			// 쓰기 폼 view 호출
+			$this->load->view('board/write_v');
+		}
 	}
 }
 
