@@ -23,7 +23,7 @@
 		<tr>
 			<th colspan="4">
 				<a href="/board/lists/<?php echo $this->uri->segment(3); ?>/page/<?php echo $this->uri->segment(7); ?>" class="btn btn-primary">목록</a>
-				<a href="/board/modify/<?php echo $this->uri->segment(3); ?>/board_id/<?php echo $this->uri->segment(4); ?>/page/<?php echo $this->uri->segment(7); ?>" class="btn btn-warning">수정</a>
+				<a href="/board/modify/<?php echo $this->uri->segment(3); ?>/board_id/<?php echo $this->uri->segment(5); ?>/page/<?php echo $this->uri->segment(7); ?>" class="btn btn-warning">수정</a>
 				<a href="/board/delete/<?php echo $this->uri->segment(3); ?>/board_id/<?php echo $this->uri->segment(4); ?>/page/<?php echo $this->uri->segment(7); ?>" class="btn btn-danger">삭제</a>
 				<a href="/board/write/<?php echo $this->uri->segment(3); ?>/page/<?php echo $this->uri->segment(7); ?>" class="btn btn-success">쓰기</a>
 			</th>

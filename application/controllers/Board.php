@@ -85,7 +85,7 @@ class Board extends CI_Controller {
 
 		// 게시물 목록을 불러오기 위한 offset, limit 값 가져오기
 //		print_r($uri_segment);
-		$page = $this->uri->segment($uri_segment, 1);
+		$data['page'] = $page = $this->uri->segment($uri_segment, 1);
 //		print_r($page);
 
 
@@ -158,7 +158,7 @@ class Board extends CI_Controller {
 	function view()
 	{
 		// 게시판 이름과 게시물 번호에 해당하는 게시물 가져오기
-		$data['views'] = $this->board_m->get_view($this->uri->segment(3), $this->uri->segment(4));
+		$data['views'] = $this->board_m->get_view($this->uri->segment(3), $this->uri->segment(5));
 
 		// view 호출
 		$this->load->view('board/view_v', $data);
@@ -213,6 +213,62 @@ class Board extends CI_Controller {
 		} else {
 			// 쓰기 폼 view 호출
 			$this->load->view('board/write_v');
+		}
+	}
+
+	/**
+	 * 게시물 수정
+	 */
+	function modify()
+	{
+		echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+
+		if ($_POST) {
+			// 글 수정 POST 전송 시
+
+			// 경고창 헬퍼 로딩
+			$this->load->helper('alert');
+
+			// 주소 중에서 page 세그먼트가 있는지 검사하기 위해 주소를 배열로 반환
+			$uri_array = $this->segment_explode($this->uri->uri_string());
+
+			if (in_array('page', $uri_array)) {
+				$pages = urldecode($this->url_explode($uri_array, 'page'));
+			} else {
+				$pages = 1;
+			}
+
+			if (!$this->input->post('subject', TRUE) && !$this->input->post('contents', TRUE)) {
+				// 글 내용이 없을 경우, 프로그램단에서 한 번 더 체크
+				alert('비정상적인 접근입니다.', '/board/lists/' . $this->uri->segment(3) . '/page/' . $pages);
+				exit;
+			}
+
+			// var_dump($_POST);
+			$modify_data = array(
+				'table' => $this->uri->segment(3), //게시판 테이블명
+				'board_id' => $this->uri->segment(5), //게시물 번호
+				'subject' => $this->input->post('subject', TRUE),
+				'contents' => $this->input->post('contents', TRUE)
+			);
+
+			$result = $this->board_m->modify_board($modify_data);
+
+			if ($result) {
+				// 글 작성 성공 시 게시물 목록으로
+				alert('입력되었습니다.', '/board/lists/' . $this->uri->segment(3) . '/page/' . $pages);
+				exit;
+			} else {
+				// 글 수정 실패 시 글 내용으로
+				alert('다시 수정해 주세요.', '/board/view/' . $this->uri->segment(3) . '/board_id/' . $this->uri->segment(5) . '/page/' . $pages);
+				exit;
+			}
+		} else {
+			// 게시물 내용 가져오기
+			$data['views'] = $this->board_m->get_view($this->uri->segment(3), $this->uri->segment(5));
+
+			// 쓰기 폼 view 호출
+			$this->load->view('board/modify_v', $data);
 		}
 	}
 }
