@@ -110,6 +110,31 @@ class Board_m extends CI_Model {
 		return $result;
 	}
 
+	/**
+	 * 게시물 삭제
+	 *
+	 * @param String $table 테이블명
+	 * @param String $no 게시물 번호
+	 * @return boolean 삭제 성공 여부
+	 */
+	function delete_content($table, $no)
+	{
+		$delete_array = array(
+			'board_id' => $no,
+		);
+
+//		print_r($no);
+//		exit;
+
+		$result = $this->db->delete($table, $delete_array);
+
+//		print_r($result);
+//		exit;
+
+		// 결과 반환
+		return $result;
+	}
+
 }
 
 /* End of file Board_m.php */

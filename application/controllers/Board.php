@@ -271,6 +271,29 @@ class Board extends CI_Controller {
 			$this->load->view('board/modify_v', $data);
 		}
 	}
+
+	/**
+	 * 게시물 삭제
+	 */
+	function delete()
+	{
+		echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+
+		// 경고창 헬퍼 로딩
+		$this->load->helper('alert');
+
+		// 게시물 번호에 해당하는 게시물 삭제
+		$return = $this->board_m->delete_content($this->uri->segment(3), $this->uri->segment(5));
+
+		// 게시물 목록으로 돌아가기
+		if ($return) {
+			// 삭제가 성공한 경우
+			alert('삭제되었습니다.','/board/lists/' . $this->uri->segment(3) . '/page/' . $this->uri->segment(7));
+		} else {
+			// 삭제가 실패한 경우
+			alert('삭제 실패하였습니다.','/board/view/' . $this->uri->segment(3) . '/board_id' . $this->uri->segment(5) .'/page/' . $this->uri->segment(7));
+		}
+	}
 }
 
 /* End of file Board.php */
